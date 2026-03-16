@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configuration Files — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">Configuration Files</h1>
+  <div class="content">
+    <ul>
+      <li><code>application.yml</code> / <code>application.properties</code> — your app's central config</li>
+      <li>Profile-specific files: <code>application-dev.yml</code>, <code>application-prod.yml</code></li>
+      <li>Activate with <code>spring.profiles.active=dev</code> or env var <code>SPRING_PROFILES_ACTIVE</code></li>
+      <li>Inject values with <code>@Value("${property.name}")</code> or type-safe <code>@ConfigurationProperties</code></li>
+    </ul>
+    <pre><code><span class="cm"># application.yml</span>
+server:
+  port: <span class="num">8080</span>
+
+spring:
+  datasource:
+    url: <span class="str">jdbc:postgresql://localhost:5432/mydb</span>
+    username: <span class="str">${DB_USER:admin}</span>       <span class="cm"># env var with default</span>
+    password: <span class="str">${DB_PASSWORD}</span>
+
+app:
+  feature-flags:
+    new-checkout: <span class="kw">true</span>               <span class="cm"># custom properties — your own namespace</span></code></pre>
+    <div class="info-box">
+      <strong>Tip:</strong> Use <code>@ConfigurationProperties</code> for groups of related settings — you get type safety and validation for free.
+    </div>
+    <p><strong>Property loading order</strong> — each level overrides the one above it:</p>
+    <ol>
+      <li><code>application.yml</code> / <code>application.properties</code> — your defaults</li>
+      <li><code>application-default.yml</code> — loaded when no profile is explicitly activated</li>
+      <li>Profile-specific files — <code>application-dev.yml</code> overrides values from <code>application.yml</code> (replaces default)</li>
+      <li>Environment variables — <code>SPRING_DATASOURCE_URL</code> overrides <code>spring.datasource.url</code></li>
+      <li>Command-line arguments — <code>--server.port=9090</code> overrides everything</li>
+    </ol>
+    <p>This means you set sensible defaults in your config file, override per environment with profiles, and can still override anything at deploy time with env vars or CLI args.</p>
+
+    <div class="quiz-section">
+      <h2>Quiz: Configuration Ordering 1</h2>
+      <pre><code><span class="cm"># application.yml</span>
+server:
+  port: <span class="num">8080</span>
+
+<span class="cm"># application-dev.yml</span>
+server:
+  port: <span class="num">9090</span></code></pre>
+      <pre><code>java -jar app.jar --spring.profiles.active=dev</code></pre>
+      <p>What port does the server start on?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false">8080</button>
+        <button class="quiz-option" data-correct="true">9090</button>
+        <button class="quiz-option" data-correct="false">Neither — it fails to start</button>
+      </div>
+      <div class="quiz-explanation">
+        <p><code>application-dev.yml</code> overrides <code>application.yml</code> because profile-specific files take precedence over the default config.</p>
+      </div>
+    </div>
+
+    <div class="quiz-section">
+      <h2>Quiz: Configuration Ordering 2</h2>
+      <pre><code><span class="cm"># application.yml</span>
+server:
+  port: <span class="num">8080</span>
+
+<span class="cm"># application-prod.yml</span>
+server:
+  port: <span class="num">3000</span></code></pre>
+      <pre><code>SPRING_PROFILES_ACTIVE=prod SERVER_PORT=<span class="num">9999</span> java -jar app.jar --server.port=<span class="num">4000</span></code></pre>
+      <p>What port does the server start on?</p>
+      <div class="quiz-options">
+        <button class="quiz-option" data-correct="false">8080</button>
+        <button class="quiz-option" data-correct="false">3000</button>
+        <button class="quiz-option" data-correct="false">9999</button>
+        <button class="quiz-option" data-correct="true">4000</button>
+      </div>
+      <div class="quiz-explanation">
+        <p>Command-line arguments override everything. The full chain: <code>application.yml</code> (8080) → <code>application-prod.yml</code> (3000) → env var (9999) → CLI arg (4000).</p>
+      </div>
+    </div>
+  </div>
+  <nav class="page-nav">
+    <a href="spring-vs-boot.html" class="prev">What Does Spring Boot Do For You?</a>
+    <a href="testing.html" class="next">Testing with @SpringBootTest</a>
+  </nav>
+</main>
+
+<script>
+document.querySelectorAll('.quiz-section').forEach(function(quiz) {
+  var options = quiz.querySelectorAll('.quiz-option');
+  var explanation = quiz.querySelector('.quiz-explanation');
+  options.forEach(function(opt) {
+    opt.addEventListener('click', function() {
+      if (quiz.classList.contains('answered')) return;
+      quiz.classList.add('answered');
+      opt.classList.add('selected');
+      if (opt.dataset.correct === 'true') {
+        opt.classList.add('correct');
+      } else {
+        opt.classList.add('wrong');
+        options.forEach(function(o) {
+          if (o.dataset.correct === 'true') o.classList.add('reveal-correct');
+        });
+      }
+      if (explanation) explanation.classList.add('visible');
+    });
+  });
+});
+</script>
+
+</body>
+</html>

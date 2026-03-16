@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Modules — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">Spring Modules</h1>
+  <div class="content">
+    <ul>
+      <li>Spring is not one big library — it's a collection of <strong>modules</strong> you pick from based on what your app needs</li>
+      <li>Common modules: <strong>Spring MVC</strong> (web/REST), <strong>Spring Data</strong> (database access), <strong>Spring Security</strong> (auth), <strong>Spring AOP</strong> (cross-cutting concerns)</li>
+      <li>All modules share the same Inversion of Control and Dependency Injection foundation, so they integrate seamlessly — learn the core, and every module feels familiar</li>
+    </ul>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;margin:1rem 0;">
+      <div style="background:#E7E4ED;border-radius:12px;padding:0.8rem 1rem;text-align:center;">
+        <strong style="color:#2C1A45;font-size:0.95rem;">Spring MVC</strong><br>
+        <span style="color:#6D6973;font-size:0.8rem;">Web &amp; REST APIs</span>
+      </div>
+      <div style="background:#E7E4ED;border-radius:12px;padding:0.8rem 1rem;text-align:center;">
+        <strong style="color:#2C1A45;font-size:0.95rem;">Spring Data</strong><br>
+        <span style="color:#6D6973;font-size:0.8rem;">Database access</span>
+      </div>
+      <div style="background:#E7E4ED;border-radius:12px;padding:0.8rem 1rem;text-align:center;">
+        <strong style="color:#2C1A45;font-size:0.95rem;">Spring Security</strong><br>
+        <span style="color:#6D6973;font-size:0.8rem;">Auth &amp; authorization</span>
+      </div>
+      <div style="background:#E7E4ED;border-radius:12px;padding:0.8rem 1rem;text-align:center;">
+        <strong style="color:#2C1A45;font-size:0.95rem;">Spring AOP</strong><br>
+        <span style="color:#6D6973;font-size:0.8rem;">Aspect-oriented programming</span>
+      </div>
+      <div style="background:#E7E4ED;border-radius:12px;padding:0.8rem 1rem;text-align:center;">
+        <strong style="color:#2C1A45;font-size:0.95rem;">Spring Batch</strong><br>
+        <span style="color:#6D6973;font-size:0.8rem;">Batch processing</span>
+      </div>
+      <div style="background:#E7E4ED;border-radius:12px;padding:0.8rem 1rem;text-align:center;">
+        <strong style="color:#2C1A45;font-size:0.95rem;">Spring Cloud</strong><br>
+        <span style="color:#6D6973;font-size:0.8rem;">Distributed systems</span>
+      </div>
+      <div style="background:#E7E4ED;border-radius:12px;padding:0.8rem 1rem;text-align:center;">
+        <strong style="color:#2C1A45;font-size:0.95rem;">Spring WebFlux</strong><br>
+        <span style="color:#6D6973;font-size:0.8rem;">Reactive web</span>
+      </div>
+      <div style="background:#E7E4ED;border-radius:12px;padding:0.8rem 1rem;text-align:center;">
+        <strong style="color:#2C1A45;font-size:0.95rem;">Spring Kafka</strong><br>
+        <span style="color:#6D6973;font-size:0.8rem;">Kafka integration</span>
+      </div>
+    </div>
+  </div>
+  <nav class="page-nav">
+    <a href="autowiring-constructor.html" class="prev">Autowiring — Constructor Injection</a>
+    <a href="spring-vs-boot.html" class="next">What Does Spring Boot Do For You?</a>
+  </nav>
+</main>
+
+</body>
+</html>

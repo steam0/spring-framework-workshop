@@ -1,0 +1,380 @@
+:root {
+  --haiti: #2C1A45;
+  --haiti-light: #3D2A5C;
+  --blue: #045BFF;
+  --yellow: #FFCF3F;
+  --red: #E02400;
+  --green: #00932F;
+  --green-light: #E8F5E0;
+  --pink: #FF5797;
+  --orange: #FF7438;
+  --white: #ffffff;
+  --smoke: #F9F7FA;
+  --cloud: #E8E6EB;
+  --silver: #D8D6DB;
+  --steel: #A29EA8;
+  --pebble: #6D6973;
+  --coal: #242127;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  color: var(--coal);
+  background: var(--white);
+  line-height: 1.6;
+}
+
+/* ===== HEADER ===== */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--white);
+  border-bottom: 2px solid var(--cloud);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 2.5rem;
+}
+.home-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--coal);
+  cursor: pointer;
+}
+.home-icon:hover { color: var(--haiti); }
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+.logo-img {
+  height: 32px;
+  width: auto;
+}
+
+/* ===== MAIN CONTENT ===== */
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem 4rem;
+}
+
+/* ===== TOPIC NAV ===== */
+.topic-nav {
+  margin-bottom: 3rem;
+}
+.topic-nav h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--haiti);
+  margin-bottom: 1.2rem;
+}
+.topic-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+.topic-btn {
+  display: inline-block;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  min-width: 160px;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.topic-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* ===== PAGE TITLE ===== */
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--haiti);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid var(--yellow);
+  display: inline-block;
+}
+
+/* ===== SECTIONS ===== */
+.section {
+  margin-bottom: 3rem;
+}
+.section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--haiti);
+  margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 3px solid var(--yellow);
+  display: inline-block;
+}
+.section h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--haiti);
+  margin: 1.5rem 0 0.6rem;
+}
+.section p, .content p {
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.section strong, .content strong { color: var(--haiti); }
+
+/* ===== BULLET POINTS ===== */
+.section ul, .content ul {
+  list-style: disc;
+  margin: 0.6rem 0 1rem 1.5rem;
+}
+.section ol, .content ol {
+  list-style: decimal;
+  margin: 0.6rem 0 1rem 1.5rem;
+}
+.section li, .content li {
+  margin-bottom: 0.6rem;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.section ul li::marker, .content ul li::marker { color: var(--cloud); }
+.section ol li::marker, .content ol li::marker { color: var(--haiti); font-weight: 600; }
+
+/* ===== INFO BOXES (blockquotes) ===== */
+.info-box {
+  background: var(--green-light);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.info-box em { color: var(--pebble); font-style: italic; }
+.info-box strong { color: var(--haiti); }
+
+/* ===== CODE BLOCKS ===== */
+pre {
+  background: var(--haiti);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+pre code {
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--cloud);
+}
+/* Syntax highlighting on haiti background */
+.kw { color: #FF5797; }           /* keywords */
+.ann { color: #FFCF3F; }          /* annotations */
+.str { color: #00932F; }          /* strings */
+.typ { color: #ffffff; font-weight: 600; } /* types/classes */
+.fn { color: #FFCF3F; }           /* methods */
+.cm { color: #A29EA8; }           /* comments */
+.num { color: #FF7438; }          /* numbers */
+
+/* ===== CODE LANGUAGE TOGGLE ===== */
+.code-toggle {
+  margin: 1rem 0;
+}
+.code-toggle .code-tabs {
+  display: flex;
+  gap: 0;
+  background: var(--haiti);
+  border-radius: 12px 12px 0 0;
+  padding: 0.5rem 2rem 0;
+}
+.code-toggle .code-tab {
+  background: none;
+  border: none;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--steel);
+  cursor: pointer;
+  padding: 0.4rem 1rem 0.5rem;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.code-toggle .code-tab:hover {
+  color: var(--cloud);
+}
+.code-toggle .code-tab.active {
+  color: var(--white);
+  border-bottom-color: var(--yellow);
+}
+.code-toggle pre {
+  margin: 0;
+  border-radius: 0 0 12px 12px;
+  display: none;
+}
+.code-toggle pre.active {
+  display: block;
+}
+
+/* ===== INLINE CODE ===== */
+code:not(pre code) {
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.88em;
+  background: var(--smoke);
+  color: var(--haiti);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+/* ===== TABLES ===== */
+.table-wrap {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--cloud);
+  margin: 1rem 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+th {
+  background: var(--haiti);
+  color: var(--white);
+  padding: 0.75rem 1.25rem;
+  text-align: left;
+  font-weight: 600;
+}
+td {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--cloud);
+}
+tr:nth-child(even) td { background: var(--smoke); }
+td strong { color: var(--haiti); }
+
+/* ===== TOOLTIPS ===== */
+.tooltip {
+  position: relative;
+  border-bottom: 1.5px dashed var(--haiti);
+  cursor: help;
+}
+.tooltip .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  transform: none;
+  width: 280px;
+  background: var(--haiti);
+  color: var(--white);
+  font-size: 0.85rem;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  z-index: 10;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.tooltip .tooltip-text::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 1rem;
+  transform: none;
+  border: 6px solid transparent;
+  border-bottom-color: var(--haiti);
+}
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ===== QUIZ ===== */
+.quiz-section {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cloud);
+}
+.quiz-section h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--haiti);
+  margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 3px solid var(--yellow);
+  display: inline-block;
+}
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.quiz-option {
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  border: 2px solid var(--cloud);
+  background: var(--white);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--coal);
+  transition: border-color 0.15s, background 0.15s;
+  text-align: left;
+}
+.quiz-option:hover:not(.selected) {
+  border-color: var(--steel);
+  background: var(--smoke);
+}
+.quiz-option.selected.correct {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green);
+  font-weight: 600;
+}
+.quiz-option.selected.wrong {
+  border-color: var(--red);
+  background: #FFF6F0;
+  color: var(--red);
+}
+.quiz-option.reveal-correct {
+  border-color: var(--green);
+  background: var(--green-light);
+}
+.quiz-explanation {
+  display: none;
+  margin-top: 1rem;
+}
+.quiz-explanation.visible {
+  display: block;
+}
+
+/* ===== NAV FOOTER ===== */
+.page-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cloud);
+}
+.page-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--blue);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: opacity 0.15s;
+}
+.page-nav a:hover { opacity: 0.75; }
+.page-nav .prev::before { content: "\2190\00a0"; }
+.page-nav .next::after { content: "\00a0\2192"; }
