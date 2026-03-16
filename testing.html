@@ -125,7 +125,7 @@
     </div>
 
     <h2>@DataJpaTest — Testing the Data Layer</h2>
-    <p>Loads only the JPA layer: <code>@Repository</code>, <code>@Entity</code>, Spring Data repositories. Auto-configures an <strong>embedded in-memory database</strong> (H2) replacing your real datasource. Each test is <code>@Transactional</code> and <strong>rolls back</strong> automatically — tests don't pollute each other.</p>
+    <p>Loads only the JPA layer: <code>@Repository</code>, <code>@Entity</code>, Spring Data repositories. Auto-configures an <strong>embedded in-memory database</strong> (H2) replacing your real datasource. Each test is <span class="tooltip"><code>@Transactional</code><span class="tooltip-text">Wraps the test method in a database transaction. When the test finishes, the transaction is rolled back instead of committed — so any rows you inserted or updated are undone. This keeps each test isolated without manual cleanup.</span></span> and <strong>rolls back</strong> automatically — tests don't pollute each other.</p>
     <div class="code-toggle">
       <div class="code-tabs">
         <button class="code-tab active" data-lang="kotlin">Kotlin</button>

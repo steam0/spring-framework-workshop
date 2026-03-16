@@ -4,9 +4,9 @@ At its core, Spring is just a **dependency injection container**. No web server,
 
 What Spring Core gives you:
 
-- **IoC Container** (ApplicationContext) — creates objects, manages their lifecycle, wires them together
+- **IoC Container** ([ApplicationContext]{tooltip: The central interface in Spring's IoC container. It's the object that holds all your beans, resolves dependencies, and manages their lifecycle. Think of it as a smart HashMap<Class, Object> that knows how to wire everything together.}) — creates objects, manages their lifecycle, wires them together
 - **Dependency Injection** — constructor, setter, and field injection
-- **Component scanning** — auto-discovers your `@Component` classes
+- **[Component scanning]{tooltip: At startup, Spring scans your package tree for classes annotated with @Component (and its specializations like @Service, @Repository). Each match is automatically registered as a bean — no manual listing required.}** — auto-discovers your `@Component` classes
 
 Popular Spring modules:
 
@@ -276,7 +276,7 @@ class OrderService {
 
 Everything you've learned so far — Inversion of Control, Dependency Injection, beans, annotations, autowiring — that's all Spring Framework. Spring Boot is an [opinionated]{tooltip: An opinionated framework makes decisions for you — it picks sensible defaults so you don't have to configure everything yourself. You can still override any choice, but you only need to when the default doesn't fit.} layer on top that handles the boring parts.
 
-- **Auto-configuration** — Spring Boot detects which libraries are on your classpath and automatically configures beans for them. You don't write `@Configuration` classes for common setups — Boot does it for you.
+- **Auto-configuration** — Spring Boot detects which libraries are on your [classpath]{tooltip: The classpath is the list of JARs and directories the JVM searches when loading classes. In a Maven/Gradle project, it's your compiled code plus all declared dependencies. When Spring Boot sees e.g. Jackson on the classpath, it auto-configures a JSON mapper for you.} and automatically configures beans for them. You don't write `@Configuration` classes for common setups — Boot does it for you.
 - **Starter dependencies** — Instead of manually adding each library and matching compatible versions, you add a single starter (e.g. `spring-boot-starter-webmvc`) and Boot pulls in everything you need. Spring Boot 4 ships even smaller, more focused modules than before.
 - **Production defaults** — Health checks, metrics, and environment info via Spring Actuator. Sensible configuration out of the box — you only override what you need.
 
@@ -478,7 +478,7 @@ class OrderControllerTest {
 
 ## @DataJpaTest — Testing the Data Layer
 
-Loads only the JPA layer: `@Repository`, `@Entity`, Spring Data repositories. Auto-configures an **embedded in-memory database** (H2) replacing your real datasource. Each test is `@Transactional` and **rolls back** automatically — tests don't pollute each other.
+Loads only the JPA layer: `@Repository`, `@Entity`, Spring Data repositories. Auto-configures an **embedded in-memory database** (H2) replacing your real datasource. Each test is [`@Transactional`]{tooltip: Wraps the test method in a database transaction. When the test finishes, the transaction is rolled back instead of committed — so any rows you inserted or updated are undone. This keeps each test isolated without manual cleanup.} and **rolls back** automatically — tests don't pollute each other.
 
 ```kotlin
 @DataJpaTest
