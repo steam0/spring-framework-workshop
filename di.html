@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dependency Injection — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">Dependency Injection</h1>
+  <div class="content">
+    <div class="info-box">
+      <em>"Dependency Injection is a technique where an object receives its dependencies from an external source rather than creating them itself."</em>
+    </div>
+    <ul>
+      <li>Dependency Injection is <em>how</em> Inversion of Control is implemented in practice — Spring looks at what a bean needs and automatically provides ("injects") those dependencies</li>
+      <li><strong>Constructor injection</strong> is the recommended approach: declare dependencies as constructor parameters and Spring fills them in</li>
+      <li>This makes your classes easy to test — in a unit test, you just pass in a mock; no Spring container needed</li>
+    </ul>
+
+    <div class="code-toggle">
+      <div class="code-tabs">
+        <button class="code-tab active" data-lang="kotlin">Kotlin</button>
+        <button class="code-tab" data-lang="java">Java</button>
+      </div>
+      <pre class="active" data-lang="kotlin"><code><span class="ann">@Component</span>
+<span class="kw">class</span> <span class="typ">OrderService</span>(
+    <span class="kw">private val</span> calculator: <span class="typ">PriceCalculator</span>  <span class="cm">// Spring injects this</span>
+)</code></pre>
+      <pre data-lang="java"><code><span class="ann">@Component</span>
+<span class="kw">class</span> <span class="typ">OrderService</span> {
+    <span class="kw">private final</span> <span class="typ">PriceCalculator</span> calculator;
+
+    <span class="fn">OrderService</span>(<span class="typ">PriceCalculator</span> calculator) {
+        <span class="kw">this</span>.calculator = calculator; <span class="cm">// Spring injects this</span>
+    }
+}</code></pre>
+    </div>
+  </div>
+  <nav class="page-nav">
+    <a href="ioc.html" class="prev">Inversion of Control (IoC)</a>
+    <a href="interfaces.html" class="next">Why Interfaces Matter</a>
+  </nav>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var toggles = document.querySelectorAll('.code-toggle');
+  function switchLang(lang) {
+    toggles.forEach(function(t) {
+      t.querySelectorAll('.code-tab').forEach(function(tab) {
+        tab.classList.toggle('active', tab.dataset.lang === lang);
+      });
+      t.querySelectorAll('pre').forEach(function(pre) {
+        pre.classList.toggle('active', pre.dataset.lang === lang);
+      });
+    });
+  }
+  toggles.forEach(function(t) {
+    t.querySelectorAll('.code-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() { switchLang(this.dataset.lang); });
+    });
+  });
+});
+</script>
+</body>
+</html>

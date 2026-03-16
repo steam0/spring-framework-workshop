@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Does Spring Boot Do For You? — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">What Does Spring Boot Do For You?</h1>
+  <div class="content">
+    <p>Everything you've learned so far — Inversion of Control, Dependency Injection, beans, annotations, autowiring — that's all Spring Framework. Spring Boot is an <span class="tooltip">opinionated<span class="tooltip-text">An opinionated framework makes decisions for you — it picks sensible defaults so you don't have to configure everything yourself. You can still override any choice, but you only need to when the default doesn't fit.</span></span> layer on top that handles the boring parts.</p>
+    <ul>
+      <li><strong>Auto-configuration</strong> — Spring Boot detects which libraries are on your classpath and automatically configures beans for them. You don't write <code>@Configuration</code> classes for common setups — Boot does it for you.</li>
+      <li><strong>Starter dependencies</strong> — Instead of manually adding each library and matching compatible versions, you add a single starter (e.g. <code>spring-boot-starter-webmvc</code>) and Boot pulls in everything you need. Spring Boot 4 ships even smaller, more focused modules than before.</li>
+      <li><strong>Production defaults</strong> — Health checks, metrics, and environment info via Spring Actuator. Sensible configuration out of the box — you only override what you need.</li>
+    </ul>
+    <div class="info-box">
+      Spring Boot is not a different framework. It's the same beans, the same Dependency Injection, the same annotations — with less boilerplate to get started.
+    </div>
+  </div>
+  <nav class="page-nav">
+    <a href="modules.html" class="prev">Spring Modules</a>
+    <a href="config.html" class="next">Configuration Files</a>
+  </nav>
+</main>
+
+</body>
+</html>

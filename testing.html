@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testing with @SpringBootTest — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">Testing with @SpringBootTest</h1>
+  <div class="content">
+    <p><code>@SpringBootTest</code> loads the <strong>full application context</strong> — every bean, every config, every auto-configuration. Use it for integration tests where you need the real wiring between components.</p>
+    <ul>
+      <li><strong>@MockitoBean</strong> — replaces a specific bean with a Mockito mock inside the Spring context (replaces the deprecated <code>@MockBean</code> from earlier Spring Boot versions)</li>
+    </ul>
+    <div class="code-toggle">
+      <div class="code-tabs">
+        <button class="code-tab active" data-lang="kotlin">Kotlin</button>
+        <button class="code-tab" data-lang="java">Java</button>
+      </div>
+      <pre class="active" data-lang="kotlin"><code><span class="ann">@SpringBootTest</span>
+<span class="kw">class</span> <span class="typ">OrderServiceTest</span> {
+
+    <span class="ann">@Autowired</span>
+    <span class="kw">lateinit</span> <span class="kw">var</span> orderService: <span class="typ">OrderService</span>
+
+    <span class="ann">@MockitoBean</span>
+    <span class="kw">lateinit</span> <span class="kw">var</span> paymentGateway: <span class="typ">PaymentGateway</span>  <span class="cm">// replaced with mock</span>
+
+    <span class="ann">@Test</span>
+    <span class="kw">fun</span> <span class="fn">shouldCreateOrder</span>() {
+        <span class="fn">whenever</span>(paymentGateway.<span class="fn">charge</span>(<span class="fn">any</span>())).<span class="fn">thenReturn</span>(<span class="typ">Result</span>.<span class="fn">ok</span>())
+
+        <span class="kw">val</span> order = orderService.<span class="fn">create</span>(<span class="typ">OrderRequest</span>(<span class="str">"item-1"</span>, <span class="num">2</span>))
+
+        <span class="fn">assertThat</span>(order.status).<span class="fn">isEqualTo</span>(<span class="typ">Status</span>.CREATED)
+    }
+}</code></pre>
+      <pre data-lang="java"><code><span class="ann">@SpringBootTest</span>
+<span class="kw">class</span> <span class="typ">OrderServiceTest</span> {
+
+    <span class="ann">@Autowired</span>
+    <span class="kw">private</span> <span class="typ">OrderService</span> orderService;
+
+    <span class="ann">@MockitoBean</span>
+    <span class="kw">private</span> <span class="typ">PaymentGateway</span> paymentGateway;  <span class="cm">// replaced with mock</span>
+
+    <span class="ann">@Test</span>
+    <span class="kw">void</span> <span class="fn">shouldCreateOrder</span>() {
+        <span class="fn">when</span>(paymentGateway.<span class="fn">charge</span>(<span class="fn">any</span>())).<span class="fn">thenReturn</span>(<span class="typ">Result</span>.<span class="fn">ok</span>());
+
+        <span class="typ">Order</span> order = orderService.<span class="fn">create</span>(<span class="kw">new</span> <span class="typ">OrderRequest</span>(<span class="str">"item-1"</span>, <span class="num">2</span>));
+
+        <span class="fn">assertThat</span>(order.<span class="fn">getStatus</span>()).<span class="fn">isEqualTo</span>(<span class="typ">Status</span>.CREATED);
+    }
+}</code></pre>
+    </div>
+    <div class="info-box">
+      Full context tests can take 5–30 seconds to start. Use <strong>slice tests</strong> to load only the layer you're testing.
+    </div>
+
+    <h2 class="section">@WebMvcTest — Testing the Web Layer</h2>
+    <p>Loads only the web layer: <code>@Controller</code>, <code>@RestController</code>, <code>@ControllerAdvice</code>, filters. Does <strong>not</strong> load services, repositories, or other components. Auto-configures <code>MockMvc</code> — an HTTP client simulator that sends requests without starting a real server.</p>
+    <div class="info-box">
+      In Spring Boot 4, <code>@SpringBootTest</code> no longer auto-configures MockMvc. If you need MockMvc in a full context test, add <code>@AutoConfigureMockMvc</code> explicitly. With <code>@WebMvcTest</code>, MockMvc is still auto-configured.
+    </div>
+    <div class="code-toggle">
+      <div class="code-tabs">
+        <button class="code-tab active" data-lang="kotlin">Kotlin</button>
+        <button class="code-tab" data-lang="java">Java</button>
+      </div>
+      <pre class="active" data-lang="kotlin"><code><span class="ann">@WebMvcTest</span>(<span class="typ">OrderController</span>::<span class="kw">class</span>)  <span class="cm">// only loads this one controller</span>
+<span class="kw">class</span> <span class="typ">OrderControllerTest</span> {
+
+    <span class="ann">@Autowired</span>
+    <span class="kw">lateinit</span> <span class="kw">var</span> mockMvc: <span class="typ">MockMvc</span>          <span class="cm">// no real HTTP server</span>
+
+    <span class="ann">@MockitoBean</span>
+    <span class="kw">lateinit</span> <span class="kw">var</span> orderService: <span class="typ">OrderService</span> <span class="cm">// fake — the real bean isn't loaded</span>
+
+    <span class="ann">@Test</span>
+    <span class="kw">fun</span> <span class="fn">shouldReturnOrder</span>() {
+        <span class="fn">whenever</span>(orderService.<span class="fn">findById</span>(<span class="num">1L</span>)).<span class="fn">thenReturn</span>(<span class="typ">Order</span>(<span class="num">1L</span>, <span class="str">"item"</span>))
+
+        mockMvc.<span class="fn">perform</span>(<span class="fn">get</span>(<span class="str">"/orders/1"</span>))
+            .<span class="fn">andExpect</span>(<span class="fn">status</span>().isOk)
+            .<span class="fn">andExpect</span>(<span class="fn">jsonPath</span>(<span class="str">"$.id"</span>).<span class="fn">value</span>(<span class="num">1</span>))
+    }
+}</code></pre>
+      <pre data-lang="java"><code><span class="ann">@WebMvcTest</span>(<span class="typ">OrderController</span>.<span class="kw">class</span>)  <span class="cm">// only loads this one controller</span>
+<span class="kw">class</span> <span class="typ">OrderControllerTest</span> {
+
+    <span class="ann">@Autowired</span>
+    <span class="kw">private</span> <span class="typ">MockMvc</span> mockMvc;          <span class="cm">// no real HTTP server</span>
+
+    <span class="ann">@MockitoBean</span>
+    <span class="kw">private</span> <span class="typ">OrderService</span> orderService; <span class="cm">// fake — the real bean isn't loaded</span>
+
+    <span class="ann">@Test</span>
+    <span class="kw">void</span> <span class="fn">shouldReturnOrder</span>() <span class="kw">throws</span> <span class="typ">Exception</span> {
+        <span class="fn">when</span>(orderService.<span class="fn">findById</span>(<span class="num">1L</span>)).<span class="fn">thenReturn</span>(<span class="kw">new</span> <span class="typ">Order</span>(<span class="num">1L</span>, <span class="str">"item"</span>));
+
+        mockMvc.<span class="fn">perform</span>(<span class="fn">get</span>(<span class="str">"/orders/1"</span>))
+            .<span class="fn">andExpect</span>(<span class="fn">status</span>().<span class="fn">isOk</span>())
+            .<span class="fn">andExpect</span>(<span class="fn">jsonPath</span>(<span class="str">"$.id"</span>).<span class="fn">value</span>(<span class="num">1</span>));
+    }
+}</code></pre>
+    </div>
+
+    <h2>@DataJpaTest — Testing the Data Layer</h2>
+    <p>Loads only the JPA layer: <code>@Repository</code>, <code>@Entity</code>, Spring Data repositories. Auto-configures an <strong>embedded in-memory database</strong> (H2) replacing your real datasource. Each test is <code>@Transactional</code> and <strong>rolls back</strong> automatically — tests don't pollute each other.</p>
+    <div class="code-toggle">
+      <div class="code-tabs">
+        <button class="code-tab active" data-lang="kotlin">Kotlin</button>
+        <button class="code-tab" data-lang="java">Java</button>
+      </div>
+      <pre class="active" data-lang="kotlin"><code><span class="ann">@DataJpaTest</span>
+<span class="kw">class</span> <span class="typ">OrderRepositoryTest</span> {
+
+    <span class="ann">@Autowired</span>
+    <span class="kw">lateinit</span> <span class="kw">var</span> repo: <span class="typ">OrderRepository</span>    <span class="cm">// real repo, backed by in-memory H2</span>
+
+    <span class="ann">@Autowired</span>
+    <span class="kw">lateinit</span> <span class="kw">var</span> em: <span class="typ">TestEntityManager</span>    <span class="cm">// helper for setting up test data</span>
+
+    <span class="ann">@Test</span>
+    <span class="kw">fun</span> <span class="fn">shouldFindByStatus</span>() {
+        em.<span class="fn">persistAndFlush</span>(<span class="typ">Order</span>(<span class="str">"item"</span>, <span class="typ">Status</span>.CREATED))
+
+        <span class="kw">val</span> found = repo.<span class="fn">findByStatus</span>(<span class="typ">Status</span>.CREATED)
+
+        <span class="fn">assertThat</span>(found).<span class="fn">hasSize</span>(<span class="num">1</span>)
+    }
+    <span class="cm">// transaction rolls back here — DB is clean for next test</span>
+}</code></pre>
+      <pre data-lang="java"><code><span class="ann">@DataJpaTest</span>
+<span class="kw">class</span> <span class="typ">OrderRepositoryTest</span> {
+
+    <span class="ann">@Autowired</span>
+    <span class="kw">private</span> <span class="typ">OrderRepository</span> repo;    <span class="cm">// real repo, backed by in-memory H2</span>
+
+    <span class="ann">@Autowired</span>
+    <span class="kw">private</span> <span class="typ">TestEntityManager</span> em;    <span class="cm">// helper for setting up test data</span>
+
+    <span class="ann">@Test</span>
+    <span class="kw">void</span> <span class="fn">shouldFindByStatus</span>() {
+        em.<span class="fn">persistAndFlush</span>(<span class="kw">new</span> <span class="typ">Order</span>(<span class="str">"item"</span>, <span class="typ">Status</span>.CREATED));
+
+        <span class="typ">List</span>&lt;<span class="typ">Order</span>&gt; found = repo.<span class="fn">findByStatus</span>(<span class="typ">Status</span>.CREATED);
+
+        <span class="fn">assertThat</span>(found).<span class="fn">hasSize</span>(<span class="num">1</span>);
+    }
+    <span class="cm">// transaction rolls back here — DB is clean for next test</span>
+}</code></pre>
+    </div>
+    <div class="info-box">
+      <strong>Rule of thumb:</strong> Use the <em>narrowest</em> slice annotation that covers what you're testing — <code>@WebMvcTest</code> for controllers, <code>@DataJpaTest</code> for repositories, <code>@SpringBootTest</code> only when you need the full picture.
+    </div>
+  </div>
+  <nav class="page-nav">
+    <a href="config.html" class="prev">Configuration Files</a>
+  </nav>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var toggles = document.querySelectorAll('.code-toggle');
+  function switchLang(lang) {
+    toggles.forEach(function(t) {
+      t.querySelectorAll('.code-tab').forEach(function(tab) {
+        tab.classList.toggle('active', tab.dataset.lang === lang);
+      });
+      t.querySelectorAll('pre').forEach(function(pre) {
+        pre.classList.toggle('active', pre.dataset.lang === lang);
+      });
+    });
+  }
+  toggles.forEach(function(t) {
+    t.querySelectorAll('.code-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() { switchLang(this.dataset.lang); });
+    });
+  });
+});
+</script>
+
+</body>
+</html>
