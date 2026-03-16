@@ -30,9 +30,9 @@
 
     <p>What Spring Core gives you:</p>
     <ul>
-      <li><strong>IoC Container</strong> (ApplicationContext) — creates objects, manages their lifecycle, wires them together</li>
+      <li><strong>IoC Container</strong> (<span class="tooltip">ApplicationContext<span class="tooltip-text">The central interface in Spring's IoC container. It's the object that holds all your beans, resolves dependencies, and manages their lifecycle. Think of it as a smart HashMap&lt;Class, Object&gt; that knows how to wire everything together.</span></span>) — creates objects, manages their lifecycle, wires them together</li>
       <li><strong>Dependency Injection</strong> — constructor, setter, and field injection</li>
-      <li><strong>Component scanning</strong> — auto-discovers your <code>@Component</code> classes</li>
+      <li><strong><span class="tooltip">Component scanning<span class="tooltip-text">At startup, Spring scans your package tree for classes annotated with @Component (and its specializations like @Service, @Repository). Each match is automatically registered as a bean — no manual listing required.</span></span></strong> — auto-discovers your <code>@Component</code> classes</li>
     </ul>
 
     <p>Popular Spring modules:</p>
