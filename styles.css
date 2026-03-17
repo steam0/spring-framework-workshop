@@ -88,11 +88,26 @@ main {
   text-decoration: none;
   text-align: center;
   min-width: 160px;
-  transition: opacity 0.15s, transform 0.15s;
+  transition: background 0.15s, transform 0.15s;
 }
 .topic-btn:hover {
-  opacity: 0.88;
   transform: translateY(-1px);
+}
+.topic-btn.part1 {
+  background: var(--green-light);
+  color: var(--green);
+}
+.topic-btn.part1:hover {
+  background: var(--green);
+  color: var(--white);
+}
+.topic-btn.part2 {
+  background: #DBEAFE;
+  color: var(--blue);
+}
+.topic-btn.part2:hover {
+  background: var(--blue);
+  color: var(--white);
 }
 
 /* ===== PAGE TITLE ===== */
