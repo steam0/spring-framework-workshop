@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>nt-boot Modules — Spring Framework Workshop</title>
+<title>Getting Started — Spring Framework Workshop</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -24,30 +24,57 @@
 </header>
 
 <main>
-  <h1 class="page-title">nt-boot Modules</h1>
+  <h1 class="page-title">Getting Started</h1>
   <div class="content">
-    <p>nt-boot is a set of Spring Boot extensions that standardize how we build applications at Norsk Tipping. You add <code>nt-boot-starter-parent</code> as your Maven parent and pick the modules you need — each one auto-configures a specific concern with NT defaults already in place.</p>
+    <p>To use nt-boot, set <code>nt-boot-starter-parent</code> as your Maven parent. This gives you Spring Boot, nt-boot-core, nt-boot-web, Kotlin support, and build tooling — all pre-configured.</p>
 
-    <pre><code>&lt;parent&gt;
-    &lt;groupId&gt;no.norsktipping.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;nt-boot-starter-parent&lt;/artifactId&gt;
-    &lt;version&gt;4.x.x&lt;/version&gt;
-&lt;/parent&gt;</code></pre>
+    <div class="code-toggle">
+      <div class="code-tabs">
+        <button class="code-tab active" data-lang="minimal">Minimal pom.xml</button>
+      </div>
+      <pre class="active"><code><span class="cm">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="kw">&lt;project</span> ...&gt;
 
-    <ul>
-      <li><strong>nt-boot-core</strong> — Structured JSON logging, Prometheus metrics, application metadata</li>
-      <li><strong>nt-boot-web</strong> — Tracing headers, request/response logging, CORS configuration</li>
-      <li><strong>nt-boot-web-multi-auth</strong> — Authentication with NT Token and/or OAuth2 (Keycloak)</li>
-      <li><strong>nt-boot-feign</strong> — Declarative HTTP clients with automatic header forwarding</li>
-      <li><strong>nt-boot-kafka</strong> — Standardized Kafka consumer/producer configuration</li>
-      <li><strong>nt-boot-unleash</strong> — Feature flag management via Unleash</li>
-      <li><strong>nt-boot-leader-election-openshift</strong> — Leader election for multi-pod deployments</li>
-      <li><strong>nt-boot-redis</strong> — Redis caching with StringRedisTemplate</li>
-    </ul>
+    <span class="kw">&lt;parent&gt;</span>
+        &lt;groupId&gt;<span class="typ">no.norsktipping.boot</span>&lt;/groupId&gt;
+        &lt;artifactId&gt;<span class="ann">nt-boot-starter-parent</span>&lt;/artifactId&gt;
+        &lt;version&gt;<span class="str">4.4.0</span>&lt;/version&gt;
+    <span class="kw">&lt;/parent&gt;</span>
 
-    <div class="info-box">
-      All configuration lives under the <code>nt.*</code> namespace in <code>application.yml</code>.
+    &lt;groupId&gt;<span class="typ">no.norsktipping</span>&lt;/groupId&gt;
+    &lt;artifactId&gt;<span class="ann">my-service</span>&lt;/artifactId&gt;
+    &lt;version&gt;<span class="str">1.0.0</span>&lt;/version&gt;
+
+    &lt;properties&gt;
+        &lt;java.version&gt;<span class="num">21</span>&lt;/java.version&gt;
+    &lt;/properties&gt;
+
+<span class="kw">&lt;/project&gt;</span></code></pre>
     </div>
+
+    <div class="section">
+      <h2>What the parent gives you</h2>
+      <p>You don't need to declare these — they come automatically:</p>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.8rem;margin:1rem 0;">
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.2rem;border-left:4px solid var(--green);">
+          <strong style="color:var(--haiti);font-size:0.95rem;">nt-boot-core</strong><br>
+          <span style="color:var(--pebble);font-size:0.85rem;">JSON logging, metrics, health probes, NtApplicationConfig</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.2rem;border-left:4px solid var(--blue);">
+          <strong style="color:var(--haiti);font-size:0.95rem;">nt-boot-web</strong><br>
+          <span style="color:var(--pebble);font-size:0.85rem;">Tracing headers, request logging, CORS</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.2rem;border-left:4px solid var(--orange);">
+          <strong style="color:var(--haiti);font-size:0.95rem;">spring-boot-maven-plugin</strong><br>
+          <span style="color:var(--pebble);font-size:0.85rem;">With <code>build-info</code> goal — required for NtApplicationConfig</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.2rem;border-left:4px solid var(--pink);">
+          <strong style="color:var(--haiti);font-size:0.95rem;">Kotlin + JaCoCo + git-commit-id</strong><br>
+          <span style="color:var(--pebble);font-size:0.85rem;">Compiler, allopen plugin, and test coverage pre-configured</span>
+        </div>
+      </div>
+    </div>
+
   </div>
   <nav class="page-nav">
     <a href="why-nt-boot.html" class="prev">Why nt-boot?</a>
