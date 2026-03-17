@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nt-boot-web — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">nt-boot-web</h1>
+  <div class="content">
+    <p>Extends <code>spring-boot-web</code> with tracing and request logging.</p>
+
+    <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;no.norsktipping.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;nt-boot-web&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+
+    <p>Every incoming request automatically gets these <strong>tracing headers</strong> added to the MDC:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Header</th><th>Description</th><th>Default</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>X-Session-Id</td><td>Unique session identifier</td><td>Random UUID</td></tr>
+          <tr><td>X-Vendor-Id</td><td>Identifies the calling vendor</td><td>Unknown</td></tr>
+          <tr><td>X-Client-Id</td><td>Identifies the calling client</td><td>Unknown</td></tr>
+          <tr><td>X-Client-Version</td><td>Client version</td><td>Unknown</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>You can <strong>require</strong> these headers on all requests — any request missing them gets rejected:</p>
+
+    <pre><code>nt:
+  web:
+    tracing:
+      require-headers: true</code></pre>
+
+    <div class="info-box">
+      CORS is fully disabled by default — any origin can reach any endpoint. Configure it explicitly when exposing public APIs.
+    </div>
+  </div>
+  <nav class="page-nav">
+    <a href="nt-boot-core.html" class="prev">nt-boot-core</a>
+    <a href="nt-boot-multi-auth.html" class="next">nt-boot-multi-auth</a>
+  </nav>
+</main>
+</body>
+</html>
