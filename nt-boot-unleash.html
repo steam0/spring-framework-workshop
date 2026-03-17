@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nt-boot-unleash — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">nt-boot-unleash</h1>
+  <div class="content">
+    <p>Feature flag management with Unleash. Add the dependency and configure the server — you get an <code>Unleash</code> bean ready to inject.</p>
+
+    <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;no.norsktipping.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;nt-boot-unleash&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+
+    <pre><code>nt:
+  unleash:
+    api-url: "https://unleash.norsk-tipping.no/api"
+    api-token: "${UNLEASH_API_TOKEN}"
+    instance-id: "${HOSTNAME}"</code></pre>
+
+    <div class="code-toggle">
+      <div class="code-tabs">
+        <button class="code-tab active" data-lang="kotlin">Kotlin</button>
+        <button class="code-tab" data-lang="java">Java</button>
+      </div>
+      <pre class="active" data-lang="kotlin"><code><span class="ann">@Service</span>
+<span class="kw">class</span> <span class="typ">CheckoutService</span>(
+    <span class="kw">private</span> <span class="kw">val</span> unleash: <span class="typ">Unleash</span>
+) {
+    <span class="kw">fun</span> <span class="fn">checkout</span>() {
+        <span class="kw">if</span> (unleash.<span class="fn">isEnabled</span>(<span class="str">"new-checkout-flow"</span>)) {
+            <span class="cm">// new implementation</span>
+        } <span class="kw">else</span> {
+            <span class="cm">// old implementation</span>
+        }
+    }
+}</code></pre>
+      <pre data-lang="java"><code><span class="ann">@Service</span>
+<span class="kw">public</span> <span class="kw">class</span> <span class="typ">CheckoutService</span> {
+
+    <span class="kw">private</span> <span class="kw">final</span> <span class="typ">Unleash</span> unleash;
+
+    <span class="kw">public</span> <span class="typ">CheckoutService</span>(<span class="typ">Unleash</span> unleash) {
+        <span class="kw">this</span>.unleash = unleash;
+    }
+
+    <span class="kw">public</span> <span class="kw">void</span> <span class="fn">checkout</span>() {
+        <span class="kw">if</span> (unleash.<span class="fn">isEnabled</span>(<span class="str">"new-checkout-flow"</span>)) {
+            <span class="cm">// new implementation</span>
+        } <span class="kw">else</span> {
+            <span class="cm">// old implementation</span>
+        }
+    }
+}</code></pre>
+    </div>
+
+    <h2>How It Works</h2>
+    <ul>
+      <li>Polls the Unleash server every 15 seconds and caches toggle state locally</li>
+      <li><code>isEnabled()</code> evaluates against the local cache — no network call</li>
+      <li>If the server is down, the SDK uses the last known configuration</li>
+      <li>On cold start with no server available, all toggles return <code>false</code></li>
+    </ul>
+
+    <h2>Gradual Rollout</h2>
+    <p>Unleash supports gradual rollout strategies using Murmurhash3 of the toggle name combined with a user context. All evaluation happens locally — no user data is sent to the Unleash server.</p>
+
+    <div class="code-toggle">
+      <div class="code-tabs">
+        <button class="code-tab active" data-lang="kotlin">Kotlin</button>
+        <button class="code-tab" data-lang="java">Java</button>
+      </div>
+      <pre class="active" data-lang="kotlin"><code><span class="kw">val</span> context = <span class="typ">UnleashContext</span>.<span class="fn">builder</span>()
+    .<span class="fn">userId</span>(user.personId)
+    .<span class="fn">sessionId</span>(sessionId)
+    .<span class="fn">build</span>()
+
+<span class="kw">if</span> (unleash.<span class="fn">isEnabled</span>(<span class="str">"new-checkout-flow"</span>, context)) {
+    <span class="cm">// user is in the rollout group</span>
+}</code></pre>
+      <pre data-lang="java"><code><span class="typ">UnleashContext</span> context = <span class="typ">UnleashContext</span>.<span class="fn">builder</span>()
+    .<span class="fn">userId</span>(user.<span class="fn">getPersonId</span>())
+    .<span class="fn">sessionId</span>(sessionId)
+    .<span class="fn">build</span>();
+
+<span class="kw">if</span> (unleash.<span class="fn">isEnabled</span>(<span class="str">"new-checkout-flow"</span>, context)) {
+    <span class="cm">// user is in the rollout group</span>
+}</code></pre>
+    </div>
+  </div>
+  <nav class="page-nav">
+    <a href="nt-boot-kafka.html" class="prev">nt-boot-kafka</a>
+    <a href="nt-boot-leader-election.html" class="next">Leader Election</a>
+  </nav>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var toggles = document.querySelectorAll('.code-toggle');
+  function switchLang(lang) {
+    toggles.forEach(function(t) {
+      t.querySelectorAll('.code-tab').forEach(function(tab) {
+        tab.classList.toggle('active', tab.dataset.lang === lang);
+      });
+      t.querySelectorAll('pre').forEach(function(pre) {
+        pre.classList.toggle('active', pre.dataset.lang === lang);
+      });
+    });
+  }
+  toggles.forEach(function(t) {
+    t.querySelectorAll('.code-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() { switchLang(this.dataset.lang); });
+    });
+  });
+});
+</script>
+
+</body>
+</html>

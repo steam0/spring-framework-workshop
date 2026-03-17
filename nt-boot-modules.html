@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nt-boot Modules — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">nt-boot Modules</h1>
+  <div class="content">
+    <p>nt-boot is a set of Spring Boot extensions that standardize how we build applications at Norsk Tipping. You add <code>nt-boot-starter-parent</code> as your Maven parent and pick the modules you need — each one auto-configures a specific concern with NT defaults already in place.</p>
+
+    <pre><code>&lt;parent&gt;
+    &lt;groupId&gt;no.norsktipping.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;nt-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;4.x.x&lt;/version&gt;
+&lt;/parent&gt;</code></pre>
+
+    <ul>
+      <li><strong>nt-boot-core</strong> — Structured JSON logging, Prometheus metrics, application metadata</li>
+      <li><strong>nt-boot-web</strong> — Tracing headers, request/response logging, CORS configuration</li>
+      <li><strong>nt-boot-web-multi-auth</strong> — Authentication with NT Token and/or OAuth2 (Keycloak)</li>
+      <li><strong>nt-boot-feign</strong> — Declarative HTTP clients with automatic header forwarding</li>
+      <li><strong>nt-boot-kafka</strong> — Standardized Kafka consumer/producer configuration</li>
+      <li><strong>nt-boot-unleash</strong> — Feature flag management via Unleash</li>
+      <li><strong>nt-boot-leader-election-openshift</strong> — Leader election for multi-pod deployments</li>
+      <li><strong>nt-boot-redis</strong> — Redis caching with StringRedisTemplate</li>
+    </ul>
+
+    <div class="info-box">
+      All configuration lives under the <code>nt.*</code> namespace in <code>application.yml</code>.
+    </div>
+  </div>
+  <nav class="page-nav">
+    <a href="why-nt-boot.html" class="prev">Why nt-boot?</a>
+    <a href="nt-boot-core.html" class="next">nt-boot-core</a>
+  </nav>
+</main>
+</body>
+</html>

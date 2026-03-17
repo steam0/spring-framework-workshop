@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nt-boot-core — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">nt-boot-core</h1>
+  <div class="content">
+    <p>This module contains what every NT application must have. It exists because our Container Pipeline has strict requirements for all applications — nt-boot-core auto-configures them so you don't have to.</p>
+
+    <h2 style="font-size:1.3rem;font-weight:700;color:var(--haiti);margin:2rem 0 1rem;">Pipeline requirement → nt-boot-core solution</h2>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin:1rem 0 2rem;">
+      <div style="background:var(--smoke);border-radius:12px;padding:1.2rem 1.5rem;border-left:4px solid var(--green);">
+        <strong style="color:var(--haiti);font-size:0.95rem;">Structured JSON logging</strong><br>
+        <span style="color:var(--pebble);font-size:0.9rem;">Logstash encoder on by default — every log line is JSON to stdout</span>
+      </div>
+      <div style="background:var(--smoke);border-radius:12px;padding:1.2rem 1.5rem;border-left:4px solid var(--blue);">
+        <strong style="color:var(--haiti);font-size:0.95rem;">Application metrics (OpenMetrics)</strong><br>
+        <span style="color:var(--pebble);font-size:0.9rem;">Prometheus endpoint on <code>/actuator/prometheus</code></span>
+      </div>
+      <div style="background:var(--smoke);border-radius:12px;padding:1.2rem 1.5rem;border-left:4px solid var(--orange);">
+        <strong style="color:var(--haiti);font-size:0.95rem;">Health probes for Kubernetes</strong><br>
+        <span style="color:var(--pebble);font-size:0.9rem;">Liveness, readiness, and startup probes pre-configured</span>
+      </div>
+      <div style="background:var(--smoke);border-radius:12px;padding:1.2rem 1.5rem;border-left:4px solid var(--pink);">
+        <strong style="color:var(--haiti);font-size:0.95rem;">Traceability through environments</strong><br>
+        <span style="color:var(--pebble);font-size:0.9rem;"><code>application</code> name and <code>deployment_number</code> in every log line and metric</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>NtApplicationConfig</h2>
+      <p>A <code>@ConfigurationProperties</code> bean bound to the <code>nt.application</code> prefix. It gives every module and every log line a consistent identity:</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;margin:1rem 0;">
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.2rem;text-align:center;">
+          <strong style="color:var(--haiti);font-size:0.9rem;">clientId</strong><br>
+          <span style="color:var(--pebble);font-size:0.8rem;">Your <span class="tooltip">Maven artifactId<span class="tooltip-text" style="width:340px;text-align:left;"><pre style="background:var(--coal);border-radius:6px;padding:0.6rem 0.8rem;margin:0 0 0.5rem;font-size:0.8rem;line-height:1.5;"><code style="color:var(--cloud);font-size:0.8rem;">&lt;groupId&gt;no.norsktipping&lt;/groupId&gt;
+&lt;artifactId&gt;<span style="color:var(--yellow);font-weight:600;">my-service</span>&lt;/artifactId&gt;
+&lt;version&gt;1.0.0&lt;/version&gt;</code></pre><span style="color:var(--cloud);">The artifactId is the name of your project as declared in pom.xml. Spring Boot's build-info plugin makes it available at runtime via BuildProperties.</span></span></span><br>(from <code>BuildProperties</code>)</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.2rem;text-align:center;">
+          <strong style="color:var(--haiti);font-size:0.9rem;">clientVersion</strong><br>
+          <span style="color:var(--pebble);font-size:0.8rem;"><span class="tooltip">Deployment number<span class="tooltip-text">An auto-generated number assigned by the Container Pipeline during the build. It gives full traceability from commit to production — every log line, metric, and container image can be traced back to the exact build.</span></span><br>(from <code>DEPLOYMENT_NUMBER</code> env)</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.2rem;text-align:center;">
+          <strong style="color:var(--haiti);font-size:0.9rem;">vendorId</strong><br>
+          <span style="color:var(--pebble);font-size:0.8rem;">Defaults to<br>"Norsk-Tipping"</span>
+        </div>
+      </div>
+      <p>You never need to set these manually — they're auto-populated from <code>BuildProperties</code> and the pipeline environment. Other nt-boot modules (Unleash, Kafka, Feign) inject <code>NtApplicationConfig</code> to identify themselves consistently.</p>
+    </div>
+
+    <div class="section">
+      <h2>Structured JSON Logging</h2>
+      <p>On by default. Every log statement automatically includes <code>clientId</code> and <code>clientVersion</code> from <code>NtApplicationConfig</code>, giving full traceability from commit to production.</p>
+      <p>For local development, switch to human-readable output:</p>
+      <pre><code><span class="ann">LOG_APPENDER</span>=<span class="str">CONSOLE</span></code></pre>
+    </div>
+
+  </div>
+  <nav class="page-nav">
+    <a href="nt-boot-modules.html" class="prev">nt-boot Modules</a>
+    <a href="nt-boot-web.html" class="next">nt-boot-web</a>
+  </nav>
+</main>
+</body>
+</html>
