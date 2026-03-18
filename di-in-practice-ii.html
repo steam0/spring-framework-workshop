@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DI in Practice II — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">DI in Practice II</h1>
+  <div class="content">
+    <p>Let's look at a real application at Norsk Tipping — the same service, rewritten from version 1.6.5 to 1.7.0. This is a plain Java Servlet application, not Spring — but the principles of interfaces and dependency injection are exactly the same.</p>
+
+    <div class="section">
+      <h2>Before — v1.6.5 (no interfaces, no DI)</h2>
+      <p>The old version has a single factory class that creates everything directly. Dependencies are hardcoded — the class knows exactly which implementations exist and constructs them itself.</p>
+      <ul>
+        <li>Concrete classes instantiated with <code>new</code></li>
+        <li>No interfaces — every dependency is a specific implementation</li>
+        <li>Changing one component means editing the factory</li>
+        <li>Testing requires the real dependencies — no easy way to mock</li>
+      </ul>
+      <div style="margin:1.2rem 0;">
+        <a href="https://bitbucket.norsk-tipping.no/projects/BIB/repos/vasprizenotificationbatch/browse/src/main/java/no/norsktipping/batchjobs/vasprizenotification/factory/VasPrizeNotificationBatchFactory.java?at=refs%2Ftags%2F1.6.5#53" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--smoke);border:2px solid var(--cloud);border-radius:10px;padding:0.8rem 1.5rem;text-decoration:none;color:var(--haiti);font-weight:600;transition:border-color 0.15s;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          VasPrizeNotificationBatchFactory.java (v1.6.5)
+        </a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>After — v1.7.0 (interfaces + DI)</h2>
+      <p>The new version uses interfaces and constructor injection — done manually, without any framework. The controller declares <em>what</em> it needs through interfaces, and receives implementations via the constructor.</p>
+      <ul>
+        <li>Dependencies are interfaces, passed in through the constructor</li>
+        <li>No <code>new</code> inside the controller — it doesn't know which implementation it gets</li>
+        <li>Swapping an implementation means changing what's passed in, not the controller</li>
+        <li>Each dependency can be mocked independently in tests</li>
+      </ul>
+      <div style="margin:1.2rem 0;">
+        <a href="https://bitbucket.norsk-tipping.no/projects/BIB/repos/vasprizenotificationbatch/browse/src/main/java/no/norsktipping/batchjobs/vasprizenotification/application/MainController.java?at=refs%2Ftags%2F1.7.0" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--smoke);border:2px solid var(--cloud);border-radius:10px;padding:0.8rem 1.5rem;text-decoration:none;color:var(--haiti);font-weight:600;transition:border-color 0.15s;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          MainController.java (v1.7.0)
+        </a>
+      </div>
+    </div>
+
+    <div class="info-box">
+      Same application, same business logic — but the v1.7.0 version is testable, extensible, and follows the principles we just learned. This is what interfaces + DI look like in practice — even without Spring. Spring just automates the wiring for you.
+    </div>
+  </div>
+  <nav class="page-nav">
+    <a href="di-in-practice.html" class="prev">DI in Practice</a>
+    <a href="beans.html" class="next">Spring Beans</a>
+  </nav>
+</main>
+</body>
+</html>

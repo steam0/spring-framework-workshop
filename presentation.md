@@ -117,6 +117,34 @@ class OrderService {
 
 > Without interfaces, changing an implementation means editing every class that uses it. With interfaces, you swap the bean and nothing else changes.
 
+# Real Life Example
+
+Let's look at a real application at Norsk Tipping — the same service, rewritten from version 1.6.5 to 1.7.0. This is a plain Java Servlet application, not Spring — but the principles of interfaces and dependency injection are exactly the same.
+
+## Before — v1.6.5 (no interfaces, no DI)
+
+The old version has a single factory class that creates everything directly. Dependencies are hardcoded — the class knows exactly which implementations exist and constructs them itself.
+
+- Concrete classes instantiated with `new`
+- No interfaces — every dependency is a specific implementation
+- Changing one component means editing the factory
+- Testing requires the real dependencies — no easy way to mock
+
+[VasPrizeNotificationBatchFactory.java (v1.6.5)](https://bitbucket.norsk-tipping.no/projects/BIB/repos/vasprizenotificationbatch/browse/src/main/java/no/norsktipping/batchjobs/vasprizenotification/factory/VasPrizeNotificationBatchFactory.java?at=refs%2Ftags%2F1.6.5#53)
+
+## After — v1.7.0 (interfaces + DI)
+
+The new version uses interfaces and constructor injection — done manually, without any framework. The controller declares *what* it needs through interfaces, and receives implementations via the constructor.
+
+- Dependencies are interfaces, passed in through the constructor
+- No `new` inside the controller — it doesn't know which implementation it gets
+- Swapping an implementation means changing what's passed in, not the controller
+- Each dependency can be mocked independently in tests
+
+[MainController.java (v1.7.0)](https://bitbucket.norsk-tipping.no/projects/BIB/repos/vasprizenotificationbatch/browse/src/main/java/no/norsktipping/batchjobs/vasprizenotification/application/MainController.java?at=refs%2Ftags%2F1.7.0)
+
+> Same application, same business logic — but the v1.7.0 version is testable, extensible, and follows the principles we just learned. This is what interfaces + DI look like in practice — even without Spring. Spring just automates the wiring for you.
+
 # Spring Beans
 
 A **bean** is an object whose lifecycle is managed by the Spring container. You *declare* what should be a bean — Spring takes care of creating the instance, injecting its dependencies, and cleaning it up.
