@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raw JDBC — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">Raw JDBC</h1>
+  <div class="content">
+    <p>In this exercise you'll build a user API step by step — starting simple, then swapping implementations to see why interfaces and dependency injection matter.</p>
+
+    <div class="section">
+      <h2>Setup</h2>
+      <ol>
+        <li>Go to <a href="https://start.spring.io" style="color:var(--blue);font-weight:600;">start.spring.io</a></li>
+        <li>Configure: <strong>Spring Boot 4.0.x</strong>, <strong>Kotlin</strong>, <strong>Maven</strong></li>
+        <li>Add only <strong>Spring Web</strong> as a dependency</li>
+        <li>Download and open the project in your IDE</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h2>Step 1 — RestController</h2>
+      <p>Create a <code>@RestController</code> with a <code>GET /users/{id}</code> endpoint that returns a single user. Each user has:</p>
+      <ul>
+        <li><code>userId: Long</code></li>
+        <li><code>name: String</code></li>
+      </ul>
+      <p>For now, just return a hardcoded user. Verify it works: <code>curl http://localhost:8080/users/1</code></p>
+    </div>
+
+    <div class="section">
+      <h2>Step 2 — UserRepository interface</h2>
+      <p>Create a <code>UserRepository</code> interface with a single method:</p>
+      <pre><code><span class="kw">interface</span> <span class="typ">UserRepository</span> {
+    <span class="kw">fun</span> <span class="fn">fetchUser</span>(<span class="typ">userId</span>: <span class="typ">Long</span>): <span class="typ">User</span>?
+}</code></pre>
+      <p>Update your controller to depend on this interface instead of hardcoding the data.</p>
+    </div>
+
+    <div class="section">
+      <h2>Step 3 — HashMap implementation</h2>
+      <p>Create a class <code>InMemoryUserRepository</code> that implements <code>UserRepository</code>. Store users in a <code>HashMap&lt;Long, User&gt;</code> and look up by ID in <code>fetchUser()</code>.</p>
+      <p>Register it as a <code>@Component</code> and verify your endpoint still works.</p>
+    </div>
+
+    <div class="section">
+      <h2>Step 4 — H2 implementation</h2>
+      <p>Now create a second implementation: <code>JdbcUserRepository</code>. This one connects to an actual database.</p>
+      <ol>
+        <li>Add H2 as a dependency in your <code>pom.xml</code>:
+          <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;<span class="typ">com.h2database</span>&lt;/groupId&gt;
+    &lt;artifactId&gt;<span class="ann">h2</span>&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+        </li>
+        <li>Create a <code>@Bean</code> that returns an H2 <code>DataSource</code></li>
+        <li>In <code>JdbcUserRepository</code>, inject the <code>DataSource</code>, get a connection, and run SQL.
+          Create the table and seed it in a <code><span class="tooltip">@PostConstruct<span class="tooltip-text">A standard Java/Jakarta annotation. Spring calls this method automatically after the bean is created and all dependencies are injected — but before the application starts serving requests. Useful for one-time setup like creating tables.</span></span></code>:
+          <pre><code><span class="kw">CREATE TABLE IF NOT EXISTS</span> <span class="typ">users</span> (
+    <span class="ann">user_id</span> <span class="typ">BIGINT</span> <span class="kw">PRIMARY KEY</span>,
+    <span class="ann">name</span> <span class="typ">VARCHAR</span>(<span class="num">255</span>)
+);
+
+<span class="kw">INSERT INTO</span> <span class="typ">users</span> <span class="kw">VALUES</span> (<span class="num">1</span>, <span class="str">'Ola Nordmann'</span>);
+<span class="kw">INSERT INTO</span> <span class="typ">users</span> <span class="kw">VALUES</span> (<span class="num">2</span>, <span class="str">'Kari Nordmann'</span>);
+<span class="kw">INSERT INTO</span> <span class="typ">users</span> <span class="kw">VALUES</span> (<span class="num">3</span>, <span class="str">'Per Hansen'</span>);</code></pre>
+          Then implement <code>fetchUser()</code> with a <code>SELECT</code> by ID.
+        </li>
+        <li>Switch from the HashMap implementation to the JDBC one</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h2>Step 5 — NamedParameterJdbcTemplate</h2>
+      <p>Raw JDBC works, but it's painful — manual connection handling, positional <code>?</code> parameters, and you have to remember to close everything. Add <code>spring-boot-starter-jdbc</code> and create a third implementation using <code>NamedParameterJdbcTemplate</code>:</p>
+      <ol>
+        <li>Add the dependency:
+          <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;<span class="typ">org.springframework.boot</span>&lt;/groupId&gt;
+    &lt;artifactId&gt;<span class="ann">spring-boot-starter-jdbc</span>&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+        </li>
+        <li>Add <code>application.yml</code> with the H2 datasource URL — Spring Boot auto-configures the <code>DataSource</code> and <code>NamedParameterJdbcTemplate</code> for you</li>
+        <li>Create a <code>NamedJdbcUserRepository</code> that implements <code>UserRepository</code></li>
+        <li>Inject <code>NamedParameterJdbcTemplate</code> and use named parameters (<code>:userId</code>) instead of <code>?</code></li>
+        <li>Mark it <code>@Primary</code> so it replaces the raw JDBC version</li>
+      </ol>
+      <p>Compare: no manual connection handling, no <code>close()</code>, named parameters instead of positional ones. This is what we use in production.</p>
+    </div>
+
+    <div class="section">
+      <h2>Hints</h2>
+      <div style="display:grid;grid-template-columns:1fr;gap:0.8rem;margin:1rem 0;">
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;border-left:4px solid var(--yellow);">
+          <strong style="color:var(--haiti);">H2 in-memory URL</strong><br>
+          <span style="color:var(--pebble);">Use <code>jdbc:h2:mem:testdb</code> — the database lives in memory and disappears when the process stops.</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;border-left:4px solid var(--yellow);">
+          <strong style="color:var(--haiti);">H2's built-in DataSource</strong><br>
+          <span style="color:var(--pebble);">H2 ships with <code>org.h2.jdbcx.JdbcDataSource</code> — you can create one directly without Spring.</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;border-left:4px solid var(--yellow);">
+          <strong style="color:var(--haiti);">Two implementations, one interface</strong><br>
+          <span style="color:var(--pebble);">You have two <code>@Component</code> classes implementing <code>UserRepository</code>. Use <code>@Primary</code> or <code>@Qualifier</code> to pick which one Spring injects.</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;border-left:4px solid var(--yellow);">
+          <strong style="color:var(--haiti);">The point of the exercise</strong><br>
+          <span style="color:var(--pebble);">Because the controller depends on the <em>interface</em>, swapping from HashMap to H2 required zero changes in the controller. That's the power of DI.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      Notice how painful raw JDBC is — manual connection handling, SQL strings, ResultSet iteration. Later, Spring Data JPA will eliminate all of this.
+    </div>
+  </div>
+  <nav class="page-nav">
+    <a href="exercise-koans.html" class="prev">Spring Koans</a>
+    <a href="exercise-nt-boot-fenris.html" class="next">nt-boot-fenris</a>
+  </nav>
+</main>
+</body>
+</html>

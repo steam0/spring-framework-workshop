@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nt-boot-fenris — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">nt-boot-fenris</h1>
+  <div class="content">
+    <p>Build your own nt-boot module. <strong>nt-boot-fenris</strong> should auto-configure a database connection for any application that includes it — with per-environment connection pool settings.</p>
+
+    <div class="section">
+      <h2>Setup</h2>
+      <ol>
+        <li>Clone the nt-boot-4 repo:
+          <pre><code><span class="kw">git</span> clone https://bitbucket.norsk-tipping.no/scm/tr/nt-boot-4.git</code></pre>
+        </li>
+        <li>Create a branch for your work:
+          <pre><code><span class="kw">cd</span> nt-boot-4
+<span class="kw">git</span> checkout -b <span class="str">feature/nt-boot-fenris</span></code></pre>
+        </li>
+        <li>Look at how existing modules (e.g. <code>nt-boot-core</code>, <code>nt-boot-auth</code>) are structured — your module will follow the same pattern</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h2>The scenario</h2>
+      <p>Every team at NT needs a database. Today, each team configures their own <code>DataSource</code>, connection pool, and timeouts. The settings are copy-pasted between projects and often wrong for production. Your job: make a module that handles this automatically.</p>
+    </div>
+
+    <div class="section">
+      <h2>Requirements</h2>
+      <ol>
+        <li>Create a Maven module called <code>nt-boot-fenris</code> with groupId <code>no.norsktipping.boot</code></li>
+        <li>Define a <code>@ConfigurationProperties</code> class bound to <code>nt.fenris</code> with:
+          <ul>
+            <li><code>url</code> — JDBC connection URL</li>
+            <li><code>username</code> / <code>password</code></li>
+            <li><code>pool.max-size</code> — maximum connections (default: 10)</li>
+            <li><code>pool.min-idle</code> — minimum idle connections (default: 2)</li>
+            <li><code>pool.connection-timeout</code> — how long to wait for a connection (default: 3s). A short timeout is intentional — in a Kubernetes environment it's better to fail fast and let the caller retry or the pod restart, rather than blocking threads waiting for a connection that may never come.</li>
+          </ul>
+        </li>
+        <li>Create an auto-configuration class that:
+          <ul>
+            <li>Configures a <code>HikariDataSource</code> using the properties above</li>
+            <li>Only activates when <code>nt.fenris.url</code> is set</li>
+            <li>Backs off if the application already defines its own <code>DataSource</code></li>
+          </ul>
+        </li>
+        <li>Register your auto-configuration so Spring Boot discovers it</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h2>Per-environment configuration</h2>
+      <p>Once the module works, the consuming application just sets properties per profile:</p>
+      <div class="code-toggle">
+        <div class="code-tabs">
+          <button class="code-tab active" data-lang="dev">application-dev.yml</button>
+          <button class="code-tab" data-lang="prod">application-prod.yml</button>
+        </div>
+        <pre class="active" data-lang="dev"><code><span class="ann">nt.fenris</span>:
+  <span class="typ">url</span>: <span class="str">jdbc:h2:mem:devdb</span>
+  <span class="typ">username</span>: <span class="str">sa</span>
+  <span class="typ">password</span>: <span class="str"></span>
+  <span class="typ">pool</span>:
+    <span class="typ">max-size</span>: <span class="num">5</span>
+    <span class="typ">min-idle</span>: <span class="num">1</span>
+    <span class="typ">connection-timeout</span>: <span class="str">10s</span></code></pre>
+        <pre data-lang="prod"><code><span class="ann">nt.fenris</span>:
+  <span class="typ">url</span>: <span class="str">jdbc:postgresql://db.prod.internal:5432/fenris</span>
+  <span class="typ">username</span>: <span class="str">${DB_USER}</span>
+  <span class="typ">password</span>: <span class="str">${DB_PASSWORD}</span>
+  <span class="typ">pool</span>:
+    <span class="typ">max-size</span>: <span class="num">30</span>
+    <span class="typ">min-idle</span>: <span class="num">5</span>
+    <span class="typ">connection-timeout</span>: <span class="str">5s</span></code></pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Hints</h2>
+      <div style="display:grid;grid-template-columns:1fr;gap:0.8rem;margin:1rem 0;">
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;border-left:4px solid var(--yellow);">
+          <strong style="color:var(--haiti);">Auto-configuration registration</strong><br>
+          <span style="color:var(--pebble);">Spring Boot discovers auto-configurations via <code>META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports</code> — one fully-qualified class name per line.</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;border-left:4px solid var(--yellow);">
+          <strong style="color:var(--haiti);">Conditional activation</strong><br>
+          <span style="color:var(--pebble);">Use <code>@ConditionalOnProperty(name = "nt.fenris.url")</code> so the module does nothing unless configured.</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;border-left:4px solid var(--yellow);">
+          <strong style="color:var(--haiti);">Backing off</strong><br>
+          <span style="color:var(--pebble);">Use <code>@ConditionalOnMissingBean(DataSource::class)</code> so apps can override your DataSource if they need to.</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;border-left:4px solid var(--yellow);">
+          <strong style="color:var(--haiti);">HikariCP</strong><br>
+          <span style="color:var(--pebble);">Spring Boot includes HikariCP by default. Create a <code>HikariDataSource</code> and set <code>jdbcUrl</code>, <code>maximumPoolSize</code>, <code>minimumIdle</code>, and <code>connectionTimeout</code>.</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;border-left:4px solid var(--yellow);">
+          <strong style="color:var(--haiti);">Duration properties</strong><br>
+          <span style="color:var(--pebble);">Use <code>java.time.Duration</code> for the timeout — Spring Boot automatically converts <code>10s</code>, <code>500ms</code>, etc.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      This is exactly how the real nt-boot modules work. A single dependency in your pom.xml, a few lines of YAML per environment, and the module handles the rest.
+    </div>
+  </div>
+  <nav class="page-nav">
+    <a href="exercise-raw-jdbc.html" class="prev">Raw JDBC</a>
+    <span></span>
+  </nav>
+</main>
+
+<script>
+document.querySelectorAll('.code-toggle').forEach(toggle => {
+  const tabs = toggle.querySelectorAll('.code-tab');
+  const pres = toggle.querySelectorAll('pre');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      pres.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      toggle.querySelector(`pre[data-lang="${tab.dataset.lang}"]`).classList.add('active');
+    });
+  });
+});
+</script>
+</body>
+</html>
