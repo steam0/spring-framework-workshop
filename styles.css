@@ -109,6 +109,14 @@ main {
   background: var(--blue);
   color: var(--white);
 }
+.topic-btn.exercise {
+  background: #FFF3D6;
+  color: #946800;
+}
+.topic-btn.exercise:hover {
+  background: var(--yellow);
+  color: var(--coal);
+}
 
 /* ===== PAGE TITLE ===== */
 .page-title {

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Koans — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">Spring Koans</h1>
+  <div class="content">
+    <div class="section">
+      <h2>What is a Koan?</h2>
+      <p>A koan is a small, focused exercise where the code is already written — but broken. Each koan has failing tests and <code>TODO</code> comments that tell you exactly what to fix. Your job is to make the tests pass, one koan at a time.</p>
+      <p>The idea comes from programming koans (inspired by Zen koans): you learn by doing, not by reading. Each fix teaches one specific Spring concept.</p>
+    </div>
+
+    <div class="section">
+      <h2>How it works</h2>
+      <ol>
+        <li>Open the <code>exercises/koans</code> project in your IDE</li>
+        <li>Run all tests — they will fail</li>
+        <li>Start with <strong>Koan 1</strong>, find the <code>TODO</code> in the source code</li>
+        <li>Make the smallest change to make the test pass</li>
+        <li>Move on to the next koan</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h2>The Koans</h2>
+      <div style="display:grid;grid-template-columns:1fr;gap:0.6rem;margin:1rem 0;">
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;">
+          <strong style="color:var(--haiti);font-size:1.1rem;min-width:2rem;">1</strong>
+          <div><strong style="color:var(--haiti);">IoC</strong> — Register a class as a Spring component</div>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;">
+          <strong style="color:var(--haiti);font-size:1.1rem;min-width:2rem;">2</strong>
+          <div><strong style="color:var(--haiti);">Dependency Injection</strong> — Inject one bean into another</div>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;">
+          <strong style="color:var(--haiti);font-size:1.1rem;min-width:2rem;">3</strong>
+          <div><strong style="color:var(--haiti);">Interfaces</strong> — Depend on an interface, not a concrete class</div>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;">
+          <strong style="color:var(--haiti);font-size:1.1rem;min-width:2rem;">4</strong>
+          <div><strong style="color:var(--haiti);">Beans</strong> — Define a bean with @Configuration and @Bean</div>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;">
+          <strong style="color:var(--haiti);font-size:1.1rem;min-width:2rem;">5</strong>
+          <div><strong style="color:var(--haiti);">Autowiring</strong> — Resolve ambiguity with @Qualifier</div>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;">
+          <strong style="color:var(--haiti);font-size:1.1rem;min-width:2rem;">6</strong>
+          <div><strong style="color:var(--haiti);">Configuration</strong> — Bind properties with @ConfigurationProperties</div>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;">
+          <strong style="color:var(--haiti);font-size:1.1rem;min-width:2rem;">7</strong>
+          <div><strong style="color:var(--haiti);">Testing</strong> — Slice tests with @WebMvcTest and @DataJpaTest</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      Each koan is independent — if you get stuck, skip it and come back later. The tests are isolated so skipping one won't break the others.
+    </div>
+  </div>
+  <nav class="page-nav">
+    <span></span>
+    <a href="exercise-raw-jdbc.html" class="next">Raw JDBC</a>
+  </nav>
+</main>
+</body>
+</html>
