@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DI in Practice — Spring Framework Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="home-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  </a>
+  <a href="index.html" class="logo">
+    <img src="https://www.norsk-tipping.no/staticimages/ntds/logos/norsktipping/norsktipping-full-color.svg?v3" alt="Norsk Tipping" class="logo-img">
+  </a>
+</header>
+
+<main>
+  <h1 class="page-title">DI in Practice</h1>
+  <div class="content">
+    <p>A short video that builds a real service using dependency injection — from a messy single class to a clean, testable architecture.</p>
+
+    <p><a href="https://www.youtube.com/watch?v=J1f5b4vcxCQ" style="color:var(--blue);font-weight:600;">Watch: Dependency Injection, The Best Pattern</a></p>
+
+    <div class="section">
+      <h2>Key takeaways</h2>
+      <div style="display:grid;grid-template-columns:1fr;gap:0.6rem;margin:1rem 0;">
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;border-left:4px solid var(--green);">
+          <strong style="color:var(--haiti);">Configurable from one spot</strong><br>
+          <span style="color:var(--pebble);">All dependencies are wired at initialization — changing an implementation is a one-line change, not a rewrite.</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;border-left:4px solid var(--blue);">
+          <strong style="color:var(--haiti);">Each piece is independently testable</strong><br>
+          <span style="color:var(--pebble);">Because everything is injected through interfaces, you can mock any dependency and test components in isolation.</span>
+        </div>
+        <div style="background:var(--smoke);border-radius:12px;padding:1rem 1.5rem;border-left:4px solid var(--orange);">
+          <strong style="color:var(--haiti);">New features slot in</strong><br>
+          <span style="color:var(--pebble);">Adding a new storage type, scanner, or preview generator means creating a new class — no existing code needs to change.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      This video shows DI without any framework — just interfaces and constructors. Spring automates exactly this pattern: it creates the implementations, reads the configuration, and wires everything together for you.
+    </div>
+  </div>
+  <nav class="page-nav">
+    <a href="interfaces.html" class="prev">Why Interfaces Matter</a>
+    <a href="di-in-practice-ii.html" class="next">DI in Practice II</a>
+  </nav>
+</main>
+</body>
+</html>
